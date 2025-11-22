@@ -15,7 +15,7 @@ from livekit.agents import (
     # function_tool,
     # RunContext
 )
-from livekit.plugins import murf, silero, google, deepgram, noise_cancellation
+from livekit.plugins import murf, silero, google, deepgram, assemblyai, noise_cancellation
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 logger = logging.getLogger("agent")
@@ -76,7 +76,7 @@ async def entrypoint(ctx: JobContext):
         tts=murf.TTS(
                 voice="en-US-matthew", 
                 style="Conversation",
-                tokenizer=tokenize.basic.SentenceTokenizer(min_sentence_len=2),
+                tokenizer=tokenize.basic.SentenceTokenizer(min_sentence_len=1),
                 text_pacing=True
             ),
         # VAD and turn detection are used to determine when the user is speaking and when the agent should respond
