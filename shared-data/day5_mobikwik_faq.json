@@ -1,0 +1,154 @@
+{
+  "company": {
+    "name": "One MobiKwik Systems Ltd.",
+    "brand": "MobiKwik",
+    "founded": "2009",
+    "headquarters": "Unit No. 102, 1st Floor, Block-B, Pegasus One, Golf Course Road, Sector-53, Gurugram, Haryana-122003, India",
+    "tagline": "India's Leading Digital Financial Services Platform",
+    "description": "MobiKwik provides a mobile-wallet, UPI/payment-services, bill-pay, merchant payment gateway and broader fintech products (loans, investments) for consumers and merchants in India.",
+    "regulatory_status": "Semi-closed prepaid instrument under RBI regulations",
+    "website": "https://www.mobikwik.com/"
+  },
+  "pricing": {
+    "wallet": "1.90% per transaction",
+    "amex": "2.90% per transaction",
+    "setup_fee": "USD 0.00",
+    "maintenance": "USD 0.00",
+    "mobile_recharge": "No extra charges for online prepaid recharge",
+    "enterprise": "Customized plans with priority support available"
+  },
+  "required_documents": [
+    "PAN Card",
+    "GSTIN (for registered businesses)",
+    "Bank Account Details with Cancelled Cheque",
+    "Proof of Business",
+    "Address Proof"
+  ],
+  "entries": [
+    {
+      "title": "What is MobiKwik",
+      "content": "MobiKwik (One MobiKwik Systems Ltd.) is India's leading digital financial services platform founded in 2009. We provide a mobile-wallet, UPI/payment-services, bill-pay, merchant payment gateway and broader fintech products including loans and investments for consumers and merchants across India. Our wallet is a semi-closed prepaid instrument under RBI regulations.",
+      "keywords": ["mobikwik", "what", "about", "company", "platform", "digital", "wallet", "founded"]
+    },
+    {
+      "title": "Payment Gateway Features",
+      "content": "MobiKwik Payment Gateway supports UPI, credit/debit cards, net banking, MobiKwik wallet, EMI, and Buy Now Pay Later options. We offer seamless checkout experience with industry-leading success rates and flexible settlement options.",
+      "keywords": ["payment", "gateway", "features", "upi", "cards", "netbanking", "checkout"]
+    },
+    {
+      "title": "Pricing Structure",
+      "content": "MobiKwik Payment Gateway charges 1.90% per transaction for wallet payments and 2.90% per transaction for Amex cards. There are zero setup fees (USD 0.00) and no annual maintenance charges. For online mobile prepaid recharge, there are no extra charges. Enterprise customers can get customized plans with priority support.",
+      "keywords": ["pricing", "cost", "charges", "fees", "transaction", "rate", "percentage"]
+    },
+    {
+      "title": "Settlement Time",
+      "content": "Mobikwik offers T+1 settlement for most transactions, meaning funds are settled to your bank account within 1 business day. Instant settlement options are available for select merchants.",
+      "keywords": ["settlement", "payout", "transfer", "funds", "money", "bank", "instant"]
+    },
+    {
+      "title": "Integration Process",
+      "content": "Integration is simple with Mobikwik. We provide REST APIs, SDKs for Android, iOS, and web platforms, and plugins for popular e-commerce platforms like WooCommerce, Shopify, and Magento. Technical documentation and sandbox environment are available for testing.",
+      "keywords": ["integration", "api", "sdk", "plugin", "setup", "technical", "developer"]
+    },
+    {
+      "title": "KYC Documents Required",
+      "content": "To activate your MobiKwik merchant account, you need: PAN Card, GSTIN (for registered businesses), Bank Account Details with cancelled cheque, Proof of Business, and Address Proof. The verification process typically takes 24-48 hours.",
+      "keywords": ["kyc", "documents", "verification", "activation", "onboarding", "requirements"]
+    },
+    {
+      "title": "Supported Payment Methods",
+      "content": "Mobikwik supports all major payment methods including UPI (Google Pay, PhonePe, Paytm), all credit and debit cards (Visa, Mastercard, RuPay, Amex), 50+ net banking options, Mobikwik wallet, and BNPL options like ZestMoney and LazyPay.",
+      "keywords": ["payment", "methods", "upi", "cards", "wallet", "netbanking", "bnpl", "options"]
+    },
+    {
+      "title": "Transaction Success Rate",
+      "content": "Mobikwik maintains an industry-leading transaction success rate of over 95% through smart routing, multiple payment aggregators, and real-time retry mechanisms. We continuously optimize for better conversion.",
+      "keywords": ["success", "rate", "conversion", "failure", "performance", "reliability"]
+    },
+    {
+      "title": "Security Features",
+      "content": "Mobikwik is PCI-DSS Level 1 certified and complies with RBI guidelines. We use 256-bit SSL encryption, tokenization, 3D Secure authentication, and fraud detection systems to ensure secure transactions.",
+      "keywords": ["security", "safe", "secure", "pci", "encryption", "fraud", "protection"]
+    },
+    {
+      "title": "Refund Process",
+      "content": "Refunds can be initiated instantly through the merchant dashboard or API. The refund amount is credited back to the customer's original payment source within 5-7 business days depending on the bank.",
+      "keywords": ["refund", "return", "chargeback", "reversal", "cancel"]
+    },
+    {
+      "title": "Dashboard and Reporting",
+      "content": "Mobikwik provides a comprehensive merchant dashboard with real-time transaction monitoring, detailed analytics, settlement reports, refund management, and downloadable reports in multiple formats.",
+      "keywords": ["dashboard", "reporting", "analytics", "reports", "monitoring", "insights"]
+    },
+    {
+      "title": "Customer Support",
+      "content": "Mobikwik offers 24/7 customer support through email, phone, and chat. Dedicated account managers are available for enterprise clients. Average response time is under 2 hours for critical issues.",
+      "keywords": ["support", "help", "customer", "service", "contact", "assistance"]
+    },
+    {
+      "title": "Who Should Use Mobikwik",
+      "content": "Mobikwik is ideal for e-commerce businesses, online services, SaaS companies, educational institutions, travel and hospitality, food delivery, subscription services, and any business accepting online payments in India.",
+      "keywords": ["who", "use", "suitable", "ideal", "business", "industry", "target"]
+    },
+    {
+      "title": "Free Trial or Demo",
+      "content": "Yes, Mobikwik offers a free sandbox environment for testing the payment gateway. You can sign up for a demo account and test all features without any charges. Production account activation requires KYC completion.",
+      "keywords": ["trial", "demo", "test", "sandbox", "free", "testing"]
+    },
+    {
+      "title": "International Payments",
+      "content": "Mobikwik supports international card payments from Visa, Mastercard, and Amex. International transactions are charged at 3.99% + GST. Multi-currency support is available for select merchants.",
+      "keywords": ["international", "global", "foreign", "overseas", "currency", "cross-border"]
+    },
+    {
+      "title": "Recurring Payments",
+      "content": "Mobikwik supports recurring payments and subscriptions through e-mandate and standing instructions. Ideal for SaaS, OTT platforms, and subscription-based businesses.",
+      "keywords": ["recurring", "subscription", "mandate", "auto", "debit", "repeat"]
+    },
+    {
+      "title": "Mobile App Integration",
+      "content": "Mobikwik provides native SDKs for Android and iOS with seamless in-app payment experience. The SDKs are lightweight, easy to integrate, and support all payment methods.",
+      "keywords": ["mobile", "app", "android", "ios", "sdk", "native"]
+    },
+    {
+      "title": "Checkout Customization",
+      "content": "The Mobikwik checkout page can be customized with your brand logo, colors, and theme. You can also use our hosted checkout or build a custom checkout using our APIs.",
+      "keywords": ["customize", "branding", "theme", "logo", "design", "checkout"]
+    },
+    {
+      "title": "Transaction Limits",
+      "content": "UPI transactions have a limit of ₹1 lakh per transaction. Card and net banking transactions can go up to ₹10 lakhs per transaction. Higher limits can be requested for enterprise accounts.",
+      "keywords": ["limit", "maximum", "cap", "restriction", "amount"]
+    },
+    {
+      "title": "Webhook Notifications",
+      "content": "MobiKwik sends real-time webhook notifications for payment status updates, refunds, and settlements. Webhooks are signed and can be verified for security.",
+      "keywords": ["webhook", "notification", "callback", "api", "event", "status"]
+    },
+    {
+      "title": "How to Download MobiKwik App",
+      "content": "You can download the MobiKwik app from the App Store for iOS devices or Google Play Store for Android devices. Simply search for 'MobiKwik' and install the app.",
+      "keywords": ["download", "app", "install", "ios", "android", "mobile", "application"]
+    },
+    {
+      "title": "Creating a MobiKwik Account",
+      "content": "To create a MobiKwik account: 1. Open the app, 2. Tap 'Create A New Account', 3. Enter your mobile number and email, 4. Enter the OTP you receive, 5. Enter your first name, last name, and date of birth. Your account will be created instantly.",
+      "keywords": ["create", "account", "signup", "register", "new", "onboarding"]
+    },
+    {
+      "title": "How to Use MobiKwik",
+      "content": "You can use MobiKwik for UPI payments, mobile recharge, bill payments, and shopping online or at store merchants via QR code or UPI. Simply link at least one bank account to start using all services.",
+      "keywords": ["use", "how", "payment", "upi", "recharge", "bills", "shopping"]
+    },
+    {
+      "title": "Mobile Recharge Charges",
+      "content": "There are no extra charges for any operator online prepaid mobile recharge through MobiKwik. You pay exactly the recharge amount with zero additional fees.",
+      "keywords": ["recharge", "mobile", "prepaid", "charges", "fees", "operator"]
+    },
+    {
+      "title": "Wallet to Bank Transfer",
+      "content": "MobiKwik offers Wallet-to-Bank Transfer service in accordance with applicable law and RBI Guidelines. You can transfer money from your MobiKwik wallet to your linked bank account.",
+      "keywords": ["wallet", "bank", "transfer", "withdraw", "money", "rbi"]
+    }
+  ]
+}

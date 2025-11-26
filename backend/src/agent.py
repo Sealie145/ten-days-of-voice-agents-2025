@@ -1,331 +1,336 @@
-import logging
+"""Day 5 Mobikwik SDR Agent – FAQ-driven lead capture."""
+
+from __future__ import annotations
+
 import json
+import logging
 import os
-from typing import Annotated, Literal, Optional
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 from dotenv import load_dotenv
-from pydantic import Field
 from livekit.agents import (
     Agent,
     AgentSession,
     JobContext,
     JobProcess,
+    MetricsCollectedEvent,
     RoomInputOptions,
+    RunContext,
+    ToolError,
     WorkerOptions,
     cli,
     function_tool,
-    RunContext,
+    metrics,
+    tokenize,
 )
-from livekit.plugins import murf, silero, google, deepgram, noise_cancellation
+from livekit.plugins import silero, murf, google, deepgram, noise_cancellation
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
+
+try:
+    from .lead_state import LeadCapture
+except ImportError:
+    from lead_state import LeadCapture
 
 logger = logging.getLogger("agent")
 load_dotenv(".env.local")
 
-CONTENT_FILE = "tutor_content.json"
-def load_content():
-    try:
-        path = os.path.join(os.path.dirname(__file__), CONTENT_FILE)
-        
-        if not os.path.exists(path):
-            logger.info(f"Content file not found. Creating {CONTENT_FILE}")
-            logger.info("Content file created successfully")
-            
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data
-            
-    except Exception as e:
-        logger.error(f"Error managing content file: {e}")
-        return []
 
-COURSE_CONTENT = load_content()
+class MobikwikKnowledgeBase:
+    """Lightweight FAQ search on top of a JSON payload."""
 
-@dataclass
-class TutorState:
-    current_topic_id: Optional[str] = None
-    current_topic_data: Optional[dict] = None
-    mode: Literal["learn", "quiz", "teach_back"] = "learn"
-    
-    def set_topic(self, topic_id: str) -> bool:
-        topic = next((item for item in COURSE_CONTENT if item["id"] == topic_id), None)
-        if topic:
-            self.current_topic_id = topic_id
-            self.current_topic_data = topic
-            return True
-        return False
+    def __init__(self, payload: Dict):
+        self.payload = payload
+        self.entries: List[Dict] = payload.get("entries", [])
+        self.required_documents: List[str] = payload.get("required_documents", [])
+        self.pricing: Dict[str, str] = payload.get("pricing", {})
+        self.company: Dict[str, str] = payload.get("company", {})
+
+    @classmethod
+    def from_disk(cls) -> "MobikwikKnowledgeBase":
+        env_path = os.getenv("DAY5_FAQ_PATH")
+        default_path = Path(__file__).resolve().parents[2] / "shared-data" / "day5_mobikwik_faq.json"
+        payload_path = Path(env_path).expanduser() if env_path else default_path
+        if not payload_path.exists():
+            raise FileNotFoundError(f"FAQ payload missing: {payload_path}")
+        with open(payload_path, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+        return cls(payload)
+
+    def _score_entry(self, query: str, entry: Dict) -> int:
+        q = query.lower()
+        score = 0
+        keywords = entry.get("keywords", [])
+        content = entry.get("content", "").lower()
+        title = entry.get("title", "").lower()
+
+        for keyword in keywords:
+            if keyword in q:
+                score += 2
+        for token in q.split():
+            if token and token in content:
+                score += 1
+        if title and title in q:
+            score += 2
+        if q in content:
+            score += 3
+        return score
+
+    def search(self, query: str, limit: int = 3) -> List[Dict]:
+        if not query.strip():
+            return []
+        scored: List[Tuple[int, Dict]] = []
+        for entry in self.entries:
+            score = self._score_entry(query, entry)
+            if score > 0:
+                scored.append((score, entry))
+        if not scored:
+            return self.entries[:limit]
+        scored.sort(key=lambda item: item[0], reverse=True)
+        return [entry for _, entry in scored[:limit]]
+
+    def answer(self, query: str) -> str:
+        matches = self.search(query)
+        if not matches:
+            return (
+                "I could not find that in the Mobikwik FAQ set I'm loaded with. "
+                "Let me know if you can rephrase it or I can connect you to a teammate."
+            )
+        formatted = [f"{entry['title']}: {entry['content']}" for entry in matches]
+        return " ".join(formatted)
+
+    def pricing_summary(self) -> str:
+        if not self.pricing:
+            return "Standard MobiKwik pricing: 1.90% for wallet transactions, 2.90% for Amex. Zero setup and maintenance fees."
+        base = self.pricing
+        return (
+            f"Wallet: {base.get('wallet')}, Amex: {base.get('amex')}. "
+            f"Setup fee: {base.get('setup_fee')}, Maintenance: {base.get('maintenance')}. "
+            f"Mobile recharge: {base.get('mobile_recharge')}. Enterprise: {base.get('enterprise')}"
+        )
+
+    def documents_summary(self) -> str:
+        if not self.required_documents:
+            return "PAN, GSTIN, bank account, and proof of business are typically required."
+        docs = ", ".join(self.required_documents)
+        return f"To go live you'll need: {docs}."
+
+
+class LeadStorage:
+    """Filesystem helper that keeps incremental and final lead JSON copies."""
+
+    def __init__(self, base_dir: Path):
+        self.base_dir = base_dir
+        self.base_dir.mkdir(parents=True, exist_ok=True)
+
+    def snapshot(self, lead: LeadCapture, lead_id: str, *, final: bool = False, summary: Optional[str] = None) -> Path:
+        payload = {
+            "lead_id": lead_id,
+            "timestamp": datetime.utcnow().isoformat(),
+            "finalized": final,
+            "summary": summary,
+            **lead.to_dict(),
+        }
+        rolling_path = self.base_dir / f"{lead_id}.json"
+        with open(rolling_path, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=2)
+
+        if final:
+            stamped = self.base_dir / f"{lead_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+            with open(stamped, "w", encoding="utf-8") as fh:
+                json.dump(payload, fh, indent=2)
+            return stamped
+        return rolling_path
+
 
 @dataclass
 class Userdata:
-    tutor_state: TutorState
-    agent_session: Optional[AgentSession] = None
+    lead: LeadCapture
+    knowledge: MobikwikKnowledgeBase
+    storage: LeadStorage
+    lead_id: str
+    final_path: Optional[Path] = None
 
-@function_tool
-async def select_topic(
-    ctx: RunContext[Userdata], 
-    topic_id: Annotated[str, Field(description="The unique identifier of the topic to study")]
-) -> str:
-    """
-    Selects a specific topic from the available curriculum for focused study.
-    Returns confirmation of selection or error message if topic is unavailable.
-    """
-    state = ctx.userdata.tutor_state
-    success = state.set_topic(topic_id.lower())
-    
-    if success:
-        topic_title = state.current_topic_data["title"]
-        return f"Topic successfully set to '{topic_title}'. Please ask the user which learning mode they prefer: Learn, Quiz, or Teach Back."
-    else:
-        available_topics = ", ".join([f"'{t['id']}'" for t in COURSE_CONTENT])
-        return f"Topic '{topic_id}' not found. Available topics: {available_topics}"
 
-@function_tool
-async def set_learning_mode(
-    ctx: RunContext[Userdata], 
-    mode: Annotated[Literal["learn", "quiz", "teach_back"], Field(description="The learning mode to activate")]
-) -> str:
-    """
-    Transitions the tutoring session to the specified learning mode and adjusts
-    the agent's voice profile and instructional approach accordingly.
-    """
-    state = ctx.userdata.tutor_state
-    state.mode = mode.lower()
-    
-    agent_session = ctx.userdata.agent_session
-    
-    if not agent_session:
-        return "Error: Unable to update voice settings. Agent session not available."
-    
-    if not state.current_topic_data:
-        return "Error: No topic selected. Please select a topic before choosing a learning mode."
-    
-    mode_config = {
-        "learn": {
-            "voice": "en-US-matthew",
-            "style": "Promo",
-            "persona": "Matthew",
-            "introduction": f"Welcome! I'm Matthew, your knowledge architect. Think of me as your personal guide through the fascinating world of {state.current_topic_data['title']}. I've spent years breaking down complex concepts into digestible insights, and I'm here to make this topic crystal clear for you. Let me paint you a comprehensive picture of what you're about to master.",
-            "instruction": f"You are Matthew - confident, articulate, and passionate about teaching. You have a gift for making complex ideas accessible. Use storytelling, real-world analogies, and progressive disclosure to build understanding layer by layer. Explain: {state.current_topic_data['summary']}"
-        },
-        "quiz": {
-            "voice": "en-US-alicia",
-            "style": "Conversational",
-            "persona": "Alicia",
-            "introduction": f"Hello! I'm Alicia, and I'll be your challenge partner today. I believe that true understanding reveals itself when you apply what you've learned. I'm not here to trick you - I'm here to help you discover how well you've internalized {state.current_topic_data['title']}. Think of this as a friendly conversation where we explore your understanding together. Ready?",
-            "instruction": f"You are Alicia - encouraging yet rigorous, warm yet precise. You create a safe space for learning through assessment. Ask the question naturally, then listen carefully to their response. Probe deeper with follow-up questions if needed. Celebrate what they get right and gently guide them when they struggle. Question: {state.current_topic_data['sample_question']}"
-        },
-        "teach_back": {
-            "voice": "en-US-ken",
-            "style": "Promo",
-            "persona": "Ken",
-            "introduction": f"Hey there! I'm Ken, and I'm genuinely curious to learn about {state.current_topic_data['title']} from you. You know what they say - teaching is the ultimate test of understanding. I'm going to be your eager student, asking questions when I'm confused, nodding along when things click. Pretend I'm a friend who knows nothing about this topic. Can you break it down for me?",
-            "instruction": f"You are Ken - curious, engaged, and authentically interested in learning. You're not pretending to be confused - you genuinely want to understand through their explanation. Ask clarifying questions like a real student would. Show enthusiasm when they explain things well. After they finish their complete explanation, use the evaluate_teaching tool to provide comprehensive, constructive feedback. Reference: {state.current_topic_data['summary']}"
-        }
-    }
-    
-    config = mode_config.get(state.mode)
-    if not config:
-        return f"Error: Invalid mode '{state.mode}'"
-    
-    agent_session.tts.update_options(voice=config["voice"], style=config["style"])
-    logger.info(f"Mode transition: {state.mode.upper()} - Persona: {config['persona']}")
-    
-    return f"PERSONA ACTIVATION: You are now {config['persona']}. Start by saying: '{config['introduction']}' Then continue with: {config['instruction']}"
+class MobikwikSdrAgent(Agent):
+    """Live SDR persona that leans on Mobikwik FAQ content."""
 
-@function_tool
-async def evaluate_teaching(
-    ctx: RunContext[Userdata],
-    user_explanation: Annotated[str, Field(description="The user's explanation of the concept in teach-back mode")]
-) -> str:
-    """
-    Evaluates the quality and accuracy of the user's explanation during teach-back mode.
-    Provides constructive feedback including a numerical score and specific improvement suggestions.
-    """
-    state = ctx.userdata.tutor_state
-    
-    if not state.current_topic_data:
-        return "Error: No active topic to evaluate against."
-    
-    logger.info(f"Evaluating explanation for topic: {state.current_topic_id}")
-    
-    evaluation_prompt = f"""
-    You are Ken, and you've just listened carefully to your student teach you about {state.current_topic_data['title']}.
-    Now it's time to give them thoughtful, constructive feedback that helps them grow.
-    
-    Reference Material (The Complete Truth): {state.current_topic_data['summary']}
-    What They Taught You: {user_explanation}
-    
-    EVALUATION FRAMEWORK:
-    
-    1. OVERALL IMPRESSION (Start here - be human!)
-       - What was your immediate reaction as a learner?
-       - Did their explanation make you genuinely understand the concept?
-       - What was the most memorable part of their teaching?
-    
-    2. SCORING (Be specific with examples):
-       - Accuracy Score (0-10): How factually correct was their explanation?
-         * Note any misconceptions or errors
-         * Highlight what they got exactly right
-       
-       - Clarity Score (0-10): Could a beginner follow their explanation?
-         * Comment on their structure and flow
-         * Point out any confusing moments
-       
-       - Completeness Score (0-10): Did they cover the essential elements?
-         * List what they included
-         * Mention important omissions
-    
-    3. STRENGTHS (Be specific and genuine):
-       - What teaching techniques did they use well?
-       - Which parts of their explanation were particularly effective?
-       - What would you steal from their approach if you were teaching this?
-    
-    4. GROWTH OPPORTUNITIES (Frame as next-level challenges):
-       - What one thing would make their explanation even more powerful?
-       - Are there any misconceptions to gently correct?
-       - What examples or analogies could enhance understanding?
-    
-    5. ENCOURAGING CLOSE:
-       - Acknowledge the courage it takes to teach
-       - Remind them that teaching reveals gaps we didn't know we had
-       - Suggest what to study next or how to deepen this understanding
-    
-    TONE GUIDELINES:
-    - Be genuinely impressed by good explanations
-    - Frame criticism as "here's how to level up" not "here's what you did wrong"
-    - Use phrases like "I noticed..." "One thing that could make this even better..."
-    - Remember: You're Ken - curious, supportive, and invested in their growth
-    - Balance rigor with warmth; precision with encouragement
-    
-    Deliver your feedback as if you're having a one-on-one conversation with someone you genuinely want to see succeed.
-    """
-    
-    return evaluation_prompt
+    def __init__(self, *, userdata: Userdata) -> None:
+        instructions = f"""You are a warm, proactive Sales Development Representative for Mobikwik, India's leading digital financial services platform.
+Key persona guidelines:
+- Greet every caller with energy, mention Mobikwik briefly, and ask what brought them in plus what they are building.
+- Keep the focus on discovering their payments / disbursals needs, asking one friendly question at a time.
+- Collect these lead fields naturally: name, company, email, role, use case, team size, timeline (now / soon / later), and optional budget.
+- After you capture name or company details, acknowledge them and explain how Mobikwik can help based on their use case.
+- When prospects ask about products, pricing, activation, or documents ALWAYS call the answer_company_question tool with their question so responses stay grounded in the FAQ.
+- Use get_lead_status whenever you need to see which fields are missing, then ask for the next gap.
+- Update each field immediately using record_lead_field after the user gives an answer. Do not wait until the end.
+- Take short qualification notes with add_lead_note if they mention urgency, channel mix, or decision-making power.
+- The moment they indicate they are done (phrases like "that's all", "sounds good", "I'll wait for the email") call finalize_lead to produce a concise verbal recap before you say goodbye.
+- The finalize_lead tool auto-generates a sentence that starts with "Lead summary:" followed by key=value pairs; always speak that result so the UI can display it and let them know an email recap is on the way.
+- Never hallucinate features or pricing; if something is missing from the FAQ, say you'll have a teammate follow up.
+- Keep replies crisp, professional, and friendly—think modern fintech SDR."""
 
-class TutorAgent(Agent):
-    def __init__(self):
-        topic_list = ", ".join([f"'{t['id']}' ({t['title']})" for t in COURSE_CONTENT])
-        
-        instructions = f"""You are the Coordinator for an innovative three-persona tutoring system that transforms how people learn through active recall and teaching.
+        super().__init__(instructions=instructions)
 
-AVAILABLE TOPICS:
-You have access to these programming topics: Variables, Loops, Functions, and Conditional Statements. When presenting topics to users, mention them naturally and conversationally without listing IDs or full technical names unless asked.
+    async def on_agent_speech_committed(self, ctx: RunContext[Userdata], message: str) -> None:  # pragma: no cover - logging
+        logger.info("Agent: %s", message)
 
-YOUR ROLE AS COORDINATOR:
-You are the friendly, intelligent interface that connects learners with three specialized teaching personas. Your job is to:
-- Warmly greet new learners and understand their learning goals
-- Present topics in an engaging way that sparks curiosity
-- Help users choose the right learning mode for their needs
-- Facilitate seamless handoffs between personas
-- Maintain continuity throughout the learning journey
+    async def on_user_speech_committed(self, ctx: RunContext[Userdata], message: str) -> None:  # pragma: no cover - logging
+        logger.info("User: %s", message)
 
-THE THREE PERSONAS YOU COORDINATE:
+    @function_tool
+    async def answer_company_question(self, ctx: RunContext[Userdata], question: str) -> str:
+        """Grounded answer for any Mobikwik company/product/pricing/document question."""
+        response = ctx.userdata.knowledge.answer(question)
+        logger.info("Answered FAQ for query=%s", question)
+        return response
 
-  MATTHEW - The Knowledge Architect (Learn Mode)
-- Voice: Authoritative yet warm, like a passionate TED speaker
-- Philosophy: "Understanding comes through clarity and connection"
-- Approach: Uses storytelling, vivid analogies, and progressive layering
-- Specialty: Transforms abstract concepts into tangible insights
-- When to use: User wants to understand a new topic from scratch
+    @function_tool
+    async def record_lead_field(self, ctx: RunContext[Userdata], field_name: str, value: str) -> str:
+        """Persist a lead field update. Valid fields: name, company, email, role, use_case, team_size, timeline, budget."""
+        lead = ctx.userdata.lead
+        try:
+            lead.update_field(field_name, value)
+        except AttributeError as exc:
+            raise ToolError(str(exc)) from exc
 
-  ALICIA - The Challenge Partner (Quiz Mode)
-- Voice: Encouraging yet precise, like a supportive coach
-- Philosophy: "Assessment reveals understanding; struggle builds strength"
-- Approach: Socratic questioning, adaptive difficulty, growth-oriented feedback
-- Specialty: Diagnosing knowledge gaps and building confidence through challenge
-- When to use: User wants to test their understanding or find weak spots
+        ctx.userdata.storage.snapshot(lead, ctx.userdata.lead_id, final=False)
+        missing = lead.missing_fields()
+        logger.info("Updated %s -> %s", field_name, value)
 
-  KEN - The Curious Learner (Teach Back Mode)
-- Voice: Genuinely curious, engaged, like an enthusiastic peer
-- Philosophy: "Teaching is thinking made visible"
-- Approach: Active listening, authentic confusion, insightful questions
-- Specialty: Drawing out complete explanations and revealing deep understanding
-- When to use: User wants to cement knowledge by teaching it back
+        if missing:
+            return (
+                f"Captured {field_name}. Still need: {', '.join(missing)}."
+                " Ask a conversational follow-up to gather the next detail."
+            )
+        return "All required lead fields captured. Feel free to confirm next steps or ask about budget."
 
-INTERACTION FLOW:
+    @function_tool
+    async def add_lead_note(self, ctx: RunContext[Userdata], note: str) -> str:
+        """Store short qualification notes such as pain points, budget mentions, or persona clues."""
+        ctx.userdata.lead.add_note(note)
+        ctx.userdata.storage.snapshot(ctx.userdata.lead, ctx.userdata.lead_id, final=False)
+        logger.info("Added lead note: %s", note)
+        return "Saved that note for the CRM."
 
-PHASE 1 - WARM WELCOME & DISCOVERY:
-"Welcome to your personalized learning experience! I'm here to connect you with three incredible teaching personas, each designed to help you master programming concepts in a unique way. What topic would you like to explore today?"
+    @function_tool
+    async def get_lead_status(self, ctx: RunContext[Userdata]) -> str:
+        """Returns a summary of which lead fields are filled vs missing."""
+        lead = ctx.userdata.lead
+        filled = [f"{field}={getattr(lead, field)}" for field in lead.REQUIRED_FIELDS if getattr(lead, field)]
+        missing = lead.missing_fields()
+        return f"Filled: {', '.join(filled) if filled else 'none yet'}. Missing: {', '.join(missing) if missing else 'none'}."
 
-Present the available topics naturally from the list provided above.
+    @function_tool
+    async def summarize_pricing_basics(self, ctx: RunContext[Userdata]) -> str:
+        """Quick reminder of Mobikwik's published pricing structure."""
+        return ctx.userdata.knowledge.pricing_summary()
 
-PHASE 2 - MODE SELECTION:
-After topic selection, present the three modes as distinct personalities:
-"Great choice! Now, who would you like to work with?
-- Matthew can explain this topic to you with crystal clarity
-- Alicia can challenge your understanding with thought-provoking questions
-- Ken can learn from YOU as you teach the concept back
+    @function_tool
+    async def list_activation_documents(self, ctx: RunContext[Userdata]) -> str:
+        """List the KYC documents required to activate a live Mobikwik account."""
+        return ctx.userdata.knowledge.documents_summary()
 
-Which approach feels right for where you are in your learning journey?"
+    @function_tool
+    async def finalize_lead(self, ctx: RunContext[Userdata]) -> str:
+        """Finalize the lead, store it to disk, and return a short summary sentence."""
+        lead = ctx.userdata.lead
+        if not lead.is_complete():
+            raise ToolError(f"Still missing: {', '.join(lead.missing_fields())}. Gather these before closing.")
 
-PHASE 3 - SEAMLESS HANDOFF:
-When user selects a mode, IMMEDIATELY use set_learning_mode tool. The tool will handle the persona introduction and transition. Do not add additional commentary - let the persona take over.
+        summary_pairs = lead.summary_pairs()
+        summary_sentence = "Lead summary: " + "; ".join(f"{k}={v}" for k, v in summary_pairs.items()) + "."
 
-PHASE 4 - ONGOING SUPPORT:
-Monitor the conversation. If users want to switch modes, facilitate immediately. If they seem stuck, suggest an alternative persona who might help differently.
-
-CRITICAL BEHAVIORS:
-- Match energy to the user's enthusiasm level
-- Use conversational language, not robotic scripts
-- Show genuine interest in their learning goals
-- Never break character once a persona is active
-- When a mode is set, trust the persona completely
-- Celebrate learning milestones authentically
-- If users are struggling, suggest the mode most likely to help
-- Remember: You're not just delivering content - you're crafting a learning experience
-
-PEDAGOGICAL PRINCIPLES:
-- Active recall > passive review
-- Teaching > re-reading
-- Spaced practice > cramming
-- Immediate feedback > delayed feedback
-- Growth mindset > fixed mindset
-- Struggle is productive; confusion is temporary
-
-Your ultimate goal: Create magical moments where complex concepts suddenly click, where users feel genuinely excited about learning, and where they walk away not just knowing more, but understanding deeply."""
-
-        super().__init__(
-            instructions=instructions,
-            tools=[select_topic, set_learning_mode, evaluate_teaching],
+        final_path = ctx.userdata.storage.snapshot(
+            lead,
+            ctx.userdata.lead_id,
+            final=True,
+            summary=summary_sentence,
         )
+        ctx.userdata.final_path = final_path
+        logger.info("Finalized lead saved to %s", final_path)
+        return summary_sentence + " Thanks for the chat—watch your inbox for a Mobikwik follow-up."
+
 
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
+    proc.userdata["mobikwik_kb"] = MobikwikKnowledgeBase.from_disk()
+
 
 async def entrypoint(ctx: JobContext):
-    ctx.log_context_fields = {"room": ctx.room.name}
-    
-    logger.info("Initializing tutoring session")
-    logger.info(f"Loaded {len(COURSE_CONTENT)} topics from curriculum")
-    
-    userdata = Userdata(tutor_state=TutorState())
-    
-    session = AgentSession(
+    ctx.log_context_fields = {
+        "room": ctx.room.name,
+    }
+
+    knowledge = ctx.proc.userdata.get("mobikwik_kb", MobikwikKnowledgeBase.from_disk())
+    storage = LeadStorage(Path("leads/day5"))
+    # Use room name or generate a unique ID - room.sid is a coroutine and can't be used directly
+    lead_id = ctx.room.name or datetime.utcnow().strftime("lead_%Y%m%d_%H%M%S")
+    userdata = Userdata(
+        lead=LeadCapture(),
+        knowledge=knowledge,
+        storage=storage,
+        lead_id=lead_id,
+    )
+    storage.snapshot(userdata.lead, lead_id, final=False)
+
+    session = AgentSession[Userdata](
+        userdata=userdata,
         stt=deepgram.STT(model="nova-3"),
         llm=google.LLM(model="gemini-2.5-flash"),
         tts=murf.TTS(
             voice="en-US-matthew",
-            style="Promo",
-            text_pacing=True,
+            style="Conversation",
+            tokenizer=tokenize.basic.WordTokenizer(),
+            text_pacing=False,
         ),
         turn_detection=MultilingualModel(),
         vad=ctx.proc.userdata["vad"],
-        userdata=userdata,
+        preemptive_generation=True,
     )
-    
-    userdata.agent_session = session
-    
+
+    usage_collector = metrics.UsageCollector()
+
+    @session.on("metrics_collected")
+    def _on_metrics_collected(ev: MetricsCollectedEvent):
+        metrics.log_metrics(ev.metrics)
+        usage_collector.collect(ev.metrics)
+
+    @session.on("user_speech_committed")
+    def _on_user_speech(ev):
+        logger.info("User said: %s", ev.text)
+
+    @session.on("agent_speech_committed")
+    def _on_agent_speech(ev):
+        logger.info("Agent said: %s", ev.text)
+
+    @session.on("error")
+    def _on_error(ev):
+        logger.error("Session error: %s", ev)
+
+    async def log_usage():
+        summary = usage_collector.get_summary()
+        logger.info("Usage: %s", summary)
+
+    ctx.add_shutdown_callback(log_usage)
+
+    agent = MobikwikSdrAgent(userdata=userdata)
+
     await session.start(
-        agent=TutorAgent(),
+        agent=agent,
         room=ctx.room,
         room_input_options=RoomInputOptions(
-            noise_cancellation=noise_cancellation.BVC()
+            noise_cancellation=noise_cancellation.BVC(),
         ),
     )
-    
+
     await ctx.connect()
-    logger.info("Tutoring session active")
+    logger.info("Day 5 Mobikwik SDR agent connected and listening.")
+
 
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint, prewarm_fnc=prewarm))
+

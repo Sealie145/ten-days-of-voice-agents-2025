@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'Teach-the-Tutor',
-  pageTitle: 'Active Recall Learning Coach',
-  pageDescription: 'Learn by teaching - Master concepts through active recall',
+  companyName: 'MobiKwik',
+  pageTitle: 'MobiKwik SDR Agent - Voice AI Assistant',
+  pageDescription: 'Connect with MobiKwik - India\'s leading digital financial services platform',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#3b82f6',
+  accent: '#D91E36',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#60a5fa',
-  startButtonText: 'Start Learning',
+  accentDark: '#FF4D6A',
+  startButtonText: 'Talk to MobiKwik SDR',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,

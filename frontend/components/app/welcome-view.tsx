@@ -34,7 +34,10 @@ export const WelcomeView = ({
         <WelcomeImage />
 
         <p className="text-foreground max-w-prose pt-1 leading-6 font-medium">
-          Chat live with your voice AI agent
+          Connect with MobiKwik's AI Sales Representative
+        </p>
+        <p className="text-muted-foreground max-w-prose pt-2 text-sm leading-5">
+          Learn about our payment gateway, pricing, and how we can help your business
         </p>
 
         <Button variant="primary" size="lg" onClick={onStartCall} className="mt-6 w-64 font-mono">
