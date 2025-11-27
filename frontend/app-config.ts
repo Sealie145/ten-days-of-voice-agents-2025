@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'MobiKwik',
-  pageTitle: 'MobiKwik SDR Agent - Voice AI Assistant',
-  pageDescription: 'Connect with MobiKwik - India\'s leading digital financial services platform',
+  companyName: 'State Bank Of India',
+  pageTitle: 'Fraud Alert - State Bank Of India',
+  pageDescription: 'Suspicious transaction detected. Please verify with our fraud detection agent.',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#D91E36',
+  accent: '#DC2626',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#FF4D6A',
-  startButtonText: 'Talk to MobiKwik SDR',
+  accentDark: '#EF4444',
+  startButtonText: 'Start Call',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,
