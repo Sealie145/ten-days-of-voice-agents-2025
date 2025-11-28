@@ -8,26 +8,27 @@ function WelcomeImage() {
       viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="text-red-600 mb-4 size-16"
+      className="text-green-600 mb-4 size-16"
     >
       <path
-        d="M32 8L8 56H56L32 8Z"
+        d="M8 24L32 8L56 24V48C56 50.2091 54.2091 52 52 52H12C9.79086 52 8 50.2091 8 48V24Z"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       />
       <path
-        d="M32 24V36"
+        d="M24 52V32H40V52"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="3"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle
         cx="32"
-        cy="44"
-        r="2"
+        cy="20"
+        r="3"
         fill="currentColor"
       />
     </svg>
@@ -49,14 +50,14 @@ export const WelcomeView = ({
       <section className="bg-background flex flex-col items-center justify-center text-center">
         <WelcomeImage />
 
-        <p className="text-foreground max-w-prose pt-1 leading-6 font-medium text-red-600">
-          ⚠️ Fraud Alert Detected
+        <p className="text-foreground max-w-prose pt-1 leading-6 font-medium">
+          🛒 Voice-Powered Grocery Shopping
         </p>
         <p className="text-muted-foreground max-w-prose pt-2 text-sm leading-5">
-          We've detected suspicious activity on your account. Please talk to our fraud detection agent to review and verify the transaction.
+          Talk to Robin, your AI shopping assistant. Order groceries, get recipe ingredients, and manage your cart - all with your voice!
         </p>
         <p className="text-muted-foreground max-w-prose pt-1 text-xs leading-5">
-          This is a secure verification call. We will never ask for your full card number or PIN.
+          Try saying: "Add milk to cart" or "I need ingredients for chai"
         </p>
 
         <Button variant="primary" size="lg" onClick={onStartCall} className="mt-6 w-64 font-mono">

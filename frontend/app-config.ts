@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'State Bank Of India',
-  pageTitle: 'Fraud Alert - State Bank Of India',
-  pageDescription: 'Suspicious transaction detected. Please verify with our fraud detection agent.',
+  companyName: 'Roshan Shop',
+  pageTitle: 'Roshan Shop - Voice Grocery Ordering',
+  pageDescription: 'Order groceries and food with your voice - powered by AI',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#DC2626',
+  accent: '#10B981',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#EF4444',
-  startButtonText: 'Start Call',
+  accentDark: '#34D399',
+  startButtonText: 'Start Shopping',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,
