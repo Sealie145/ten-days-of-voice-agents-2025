@@ -1,0 +1,152 @@
+{
+  "passive_mobs": [
+    {
+      "name": "Cow",
+      "drops": ["Raw Beef", "Leather"],
+      "behavior": "Wanders peacefully, can be bred with wheat",
+      "health": 10
+    },
+    {
+      "name": "Pig",
+      "drops": ["Raw Porkchop"],
+      "behavior": "Wanders peacefully, can be bred with carrots/potatoes/beetroot",
+      "health": 10,
+      "special": "Can be ridden with saddle"
+    },
+    {
+      "name": "Chicken",
+      "drops": ["Raw Chicken", "Feathers", "Eggs"],
+      "behavior": "Wanders peacefully, lays eggs, can be bred with seeds",
+      "health": 4
+    },
+    {
+      "name": "Sheep",
+      "drops": ["Wool", "Raw Mutton"],
+      "behavior": "Wanders peacefully, can be sheared for wool, bred with wheat",
+      "health": 8,
+      "colors": ["White", "Black", "Gray", "Brown", "Pink", "etc."]
+    },
+    {
+      "name": "Horse",
+      "drops": ["Leather"],
+      "behavior": "Can be tamed and ridden, bred with golden carrots/apples",
+      "health": 15-30,
+      "special": "Rideable, can wear armor"
+    },
+    {
+      "name": "Villager",
+      "drops": ["Nothing"],
+      "behavior": "Trades items, lives in villages, has professions",
+      "health": 20,
+      "special": "Trading system"
+    }
+  ],
+  "neutral_mobs": [
+    {
+      "name": "Wolf",
+      "drops": ["Nothing"],
+      "behavior": "Neutral until attacked, can be tamed with bones",
+      "health": 8,
+      "damage": 4,
+      "special": "Becomes pet dog when tamed"
+    },
+    {
+      "name": "Iron Golem",
+      "drops": ["Iron Ingots", "Poppies"],
+      "behavior": "Protects villagers, attacks hostile mobs",
+      "health": 100,
+      "damage": 21
+    },
+    {
+      "name": "Enderman",
+      "drops": ["Ender Pearls"],
+      "behavior": "Neutral unless looked at directly, teleports",
+      "health": 40,
+      "damage": 7,
+      "special": "Don't look directly at them!"
+    }
+  ],
+  "hostile_mobs": [
+    {
+      "name": "Zombie",
+      "drops": ["Rotten Flesh", "Iron Ingots (rare)", "Carrots/Potatoes (rare)"],
+      "behavior": "Spawns in darkness, burns in sunlight, attacks players",
+      "health": 20,
+      "damage": 3,
+      "spawns": "Night, dark areas"
+    },
+    {
+      "name": "Skeleton",
+      "drops": ["Bones", "Arrows"],
+      "behavior": "Shoots arrows from distance, burns in sunlight",
+      "health": 20,
+      "damage": 4,
+      "spawns": "Night, dark areas",
+      "special": "Ranged attacker"
+    },
+    {
+      "name": "Creeper",
+      "drops": ["Gunpowder", "Music Discs (if killed by skeleton)"],
+      "behavior": "Silently approaches and explodes near player",
+      "health": 20,
+      "damage": "49 (explosion)",
+      "spawns": "Night, dark areas",
+      "special": "SSSSSS... BOOM! Destroys blocks"
+    },
+    {
+      "name": "Spider",
+      "drops": ["String", "Spider Eyes"],
+      "behavior": "Climbs walls, neutral in daylight, hostile at night",
+      "health": 16,
+      "damage": 2,
+      "spawns": "Night, dark areas",
+      "special": "Can climb walls"
+    },
+    {
+      "name": "Cave Spider",
+      "drops": ["String", "Spider Eyes"],
+      "behavior": "Smaller, faster, poisons on attack",
+      "health": 12,
+      "damage": 2,
+      "spawns": "Mineshafts",
+      "special": "Inflicts poison"
+    },
+    {
+      "name": "Witch",
+      "drops": ["Glass Bottles", "Glowstone Dust", "Gunpowder", "Redstone", "Sugar", "Sticks"],
+      "behavior": "Throws harmful potions, drinks healing potions",
+      "health": 26,
+      "damage": "Varies (potions)",
+      "spawns": "Swamp huts, raids"
+    },
+    {
+      "name": "Enderman",
+      "drops": ["Ender Pearls"],
+      "behavior": "Teleports, attacks if looked at directly",
+      "health": 40,
+      "damage": 7,
+      "spawns": "Overworld at night, The End",
+      "special": "Teleportation, picks up blocks"
+    }
+  ],
+  "boss_mobs": [
+    {
+      "name": "Ender Dragon",
+      "drops": ["Dragon Egg", "Massive XP"],
+      "behavior": "Flies around End, destroys blocks, shoots fireballs",
+      "health": 200,
+      "damage": "Varies",
+      "location": "The End",
+      "special": "Final boss, respawnable"
+    },
+    {
+      "name": "Wither",
+      "drops": ["Nether Star"],
+      "behavior": "Flies, shoots explosive skulls, causes Wither effect",
+      "health": 300,
+      "damage": "Varies",
+      "location": "Player-summoned",
+      "special": "Requires 4 soul sand + 3 wither skeleton skulls to summon"
+    }
+  ]
+}

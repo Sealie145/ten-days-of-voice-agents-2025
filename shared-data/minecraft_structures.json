@@ -1,0 +1,113 @@
+{
+  "overworld_structures": [
+    {
+      "name": "Village",
+      "description": "Settlement with villagers and various buildings",
+      "biomes": ["Plains", "Desert", "Savanna", "Taiga", "Snowy Tundra"],
+      "features": ["Houses", "Farms", "Blacksmith", "Church", "Library"],
+      "loot": ["Bread", "Apples", "Iron Ingots", "Diamonds (rare)", "Emeralds"],
+      "mobs": ["Villagers", "Iron Golems", "Cats"],
+      "special": "Trading hub, can be raided by pillagers"
+    },
+    {
+      "name": "Pillager Outpost",
+      "description": "Tower occupied by hostile pillagers",
+      "biomes": ["Plains", "Desert", "Savanna", "Taiga"],
+      "features": ["Watchtower", "Cages", "Target Practice"],
+      "loot": ["Crossbows", "Arrows", "Dark Oak Logs"],
+      "mobs": ["Pillagers", "Pillager Captain"],
+      "special": "Defeating captain triggers Bad Omen effect"
+    },
+    {
+      "name": "Desert Temple",
+      "description": "Pyramid with hidden treasure room and TNT trap",
+      "biomes": ["Desert"],
+      "features": ["4 Towers", "Hidden Chamber", "TNT Trap"],
+      "loot": ["Diamonds", "Gold", "Iron", "Emeralds", "Enchanted Books", "Horse Armor"],
+      "danger": "TNT trap under pressure plate",
+      "special": "4 chests with valuable loot"
+    },
+    {
+      "name": "Jungle Temple",
+      "description": "Mossy cobblestone structure with puzzles and traps",
+      "biomes": ["Jungle"],
+      "features": ["Arrow Trap", "Lever Puzzle", "Hidden Chests"],
+      "loot": ["Diamonds", "Gold", "Iron", "Emeralds", "Bones"],
+      "danger": "Arrow dispensers, tripwire traps",
+      "special": "Requires solving lever puzzle"
+    },
+    {
+      "name": "Ocean Monument",
+      "description": "Underwater structure guarded by guardians",
+      "biomes": ["Deep Ocean"],
+      "features": ["Prismarine Blocks", "Gold Blocks", "Sponge Room"],
+      "loot": ["Gold Blocks", "Sponges", "Prismarine"],
+      "mobs": ["Guardians", "Elder Guardians"],
+      "special": "Elder Guardians give Mining Fatigue"
+    },
+    {
+      "name": "Woodland Mansion",
+      "description": "Massive dark oak structure with many rooms",
+      "biomes": ["Dark Forest"],
+      "features": ["Multiple Floors", "Secret Rooms", "Prison Cells"],
+      "loot": ["Diamonds", "Emeralds", "Enchanted Books", "Music Discs", "Totems of Undying"],
+      "mobs": ["Vindicators", "Evokers", "Vexes"],
+      "special": "Very rare, contains Totem of Undying"
+    },
+    {
+      "name": "Mineshaft",
+      "description": "Abandoned underground mine with tunnels and rails",
+      "biomes": ["Underground"],
+      "features": ["Wooden Supports", "Rails", "Minecarts with Chests"],
+      "loot": ["Iron", "Gold", "Diamonds", "Lapis", "Melon Seeds", "Rails"],
+      "mobs": ["Cave Spiders", "Zombies", "Skeletons"],
+      "danger": "Cave spider spawners"
+    },
+    {
+      "name": "Stronghold",
+      "description": "Underground fortress containing End Portal",
+      "biomes": ["Underground"],
+      "features": ["Library", "Portal Room", "Prison", "Corridors"],
+      "loot": ["Books", "Apples", "Iron", "Diamonds (rare)"],
+      "mobs": ["Silverfish"],
+      "special": "Contains End Portal to fight Ender Dragon"
+    },
+    {
+      "name": "Dungeon",
+      "description": "Small underground room with mob spawner",
+      "biomes": ["Underground"],
+      "features": ["Mob Spawner", "2 Chests", "Mossy Cobblestone"],
+      "loot": ["Saddles", "Name Tags", "Music Discs", "Enchanted Books", "Golden Apples"],
+      "mobs": ["Zombies", "Skeletons", "Spiders"],
+      "special": "Random spawner type"
+    }
+  ],
+  "nether_structures": [
+    {
+      "name": "Nether Fortress",
+      "description": "Large structure made of nether bricks",
+      "features": ["Bridges", "Corridors", "Blaze Spawners"],
+      "loot": ["Nether Wart", "Diamonds", "Iron", "Gold", "Horse Armor"],
+      "mobs": ["Blazes", "Wither Skeletons", "Magma Cubes"],
+      "special": "Only place to find Blazes and Nether Wart"
+    },
+    {
+      "name": "Bastion Remnant",
+      "description": "Ruined piglin structure with gold",
+      "features": ["Treasure Room", "Housing Units", "Stables"],
+      "loot": ["Gold", "Ancient Debris", "Netherite Scraps", "Enchanted Items"],
+      "mobs": ["Piglins", "Piglin Brutes", "Hoglins"],
+      "special": "Lots of gold, dangerous Piglin Brutes"
+    }
+  ],
+  "end_structures": [
+    {
+      "name": "End City",
+      "description": "Tall purple structures in The End",
+      "features": ["Towers", "Bridges", "End Ships (rare)"],
+      "loot": ["Elytra", "Shulker Boxes", "Enchanted Diamond Gear", "Chorus Fruit"],
+      "mobs": ["Shulkers", "Endermen"],
+      "special": "Only source of Elytra (from End Ships)"
+    }
+  ]
+}

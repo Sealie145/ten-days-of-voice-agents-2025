@@ -8,28 +8,32 @@ function WelcomeImage() {
       viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="text-green-600 mb-4 size-16"
+      className="text-amber-700 mb-4 size-16"
     >
+      {/* Minecraft-style blocky cube */}
+      <rect x="16" y="8" width="32" height="32" fill="currentColor" opacity="0.3" />
       <path
-        d="M8 24L32 8L56 24V48C56 50.2091 54.2091 52 52 52H12C9.79086 52 8 50.2091 8 48V24Z"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M24 52V32H40V52"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle
-        cx="32"
-        cy="20"
-        r="3"
+        d="M16 8L32 0L48 8V24L32 32L16 24V8Z"
         fill="currentColor"
+        opacity="0.6"
+      />
+      <path
+        d="M48 8L64 16V40L48 48V24L48 8Z"
+        fill="currentColor"
+        opacity="0.4"
+      />
+      <path
+        d="M16 24L0 32V56L16 48V24Z"
+        fill="currentColor"
+        opacity="0.5"
+      />
+      <rect x="20" y="44" width="24" height="16" fill="currentColor" opacity="0.7" />
+      {/* Pickaxe */}
+      <path
+        d="M40 40L48 32M48 32L52 36M48 32L44 28"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -51,13 +55,13 @@ export const WelcomeView = ({
         <WelcomeImage />
 
         <p className="text-foreground max-w-prose pt-1 leading-6 font-medium">
-          🛒 Voice-Powered Grocery Shopping
+          ⛏️ Minecraft Voice Adventure
         </p>
         <p className="text-muted-foreground max-w-prose pt-2 text-sm leading-5">
-          Talk to Robin, your AI shopping assistant. Order groceries, get recipe ingredients, and manage your cart - all with your voice!
+          Your AI Game Master will guide you through a blocky survival adventure. Mine, craft, build, and explore - all with your voice!
         </p>
         <p className="text-muted-foreground max-w-prose pt-1 text-xs leading-5">
-          Try saying: "Add milk to cart" or "I need ingredients for chai"
+          Try saying: "I explore the cave" or "I want to craft a sword"
         </p>
 
         <Button variant="primary" size="lg" onClick={onStartCall} className="mt-6 w-64 font-mono">

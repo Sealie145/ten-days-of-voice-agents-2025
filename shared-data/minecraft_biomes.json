@@ -1,0 +1,78 @@
+{
+  "biomes": [
+    {
+      "name": "Forest",
+      "description": "Dense with oak and birch trees",
+      "common_mobs": ["Pigs", "Cows", "Chickens", "Sheep"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers", "Spiders"],
+      "resources": ["Oak Wood", "Birch Wood", "Flowers", "Mushrooms"],
+      "structures": ["Woodland Mansion (rare)"]
+    },
+    {
+      "name": "Plains",
+      "description": "Flat grasslands with scattered trees",
+      "common_mobs": ["Horses", "Donkeys", "Cows", "Sheep"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers"],
+      "resources": ["Tall Grass", "Flowers", "Few Trees"],
+      "structures": ["Villages", "Pillager Outposts"]
+    },
+    {
+      "name": "Desert",
+      "description": "Sandy wasteland with cacti",
+      "common_mobs": ["Rabbits", "Husks (zombie variant)"],
+      "hostile_mobs": ["Husks", "Skeletons", "Creepers"],
+      "resources": ["Sand", "Sandstone", "Cacti", "Dead Bushes"],
+      "structures": ["Desert Temples", "Desert Villages", "Desert Wells"]
+    },
+    {
+      "name": "Mountains",
+      "description": "Tall peaks with snow caps",
+      "common_mobs": ["Goats", "Llamas"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers"],
+      "resources": ["Stone", "Coal", "Iron Ore", "Emerald Ore"],
+      "structures": ["Mountain Villages"],
+      "special": "Emeralds spawn here"
+    },
+    {
+      "name": "Taiga",
+      "description": "Cold forest with spruce trees",
+      "common_mobs": ["Wolves", "Foxes", "Rabbits"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers", "Spiders"],
+      "resources": ["Spruce Wood", "Ferns", "Sweet Berry Bushes"],
+      "structures": ["Taiga Villages"]
+    },
+    {
+      "name": "Swamp",
+      "description": "Murky waters with lily pads",
+      "common_mobs": ["Slimes (at night)", "Frogs"],
+      "hostile_mobs": ["Witches", "Slimes", "Drowned"],
+      "resources": ["Oak Wood", "Lily Pads", "Vines", "Clay"],
+      "structures": ["Witch Huts", "Swamp Villages"]
+    },
+    {
+      "name": "Jungle",
+      "description": "Dense tropical forest",
+      "common_mobs": ["Parrots", "Ocelots", "Pandas"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers", "Spiders"],
+      "resources": ["Jungle Wood", "Cocoa Beans", "Melons", "Bamboo"],
+      "structures": ["Jungle Temples"]
+    },
+    {
+      "name": "Ocean",
+      "description": "Deep waters with marine life",
+      "common_mobs": ["Fish", "Dolphins", "Squids", "Turtles"],
+      "hostile_mobs": ["Drowned", "Guardians (near monuments)"],
+      "resources": ["Kelp", "Coral", "Sea Pickles", "Prismarine"],
+      "structures": ["Ocean Monuments", "Shipwrecks", "Ocean Ruins"]
+    },
+    {
+      "name": "Cave",
+      "description": "Underground tunnels and caverns",
+      "common_mobs": ["Bats"],
+      "hostile_mobs": ["Zombies", "Skeletons", "Creepers", "Spiders", "Cave Spiders"],
+      "resources": ["Coal", "Iron", "Gold", "Diamonds", "Redstone", "Lapis Lazuli"],
+      "structures": ["Mineshafts", "Dungeons"],
+      "special": "Best place for mining ores"
+    }
+  ]
+}

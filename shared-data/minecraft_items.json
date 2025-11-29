@@ -1,0 +1,48 @@
+{
+  "tools": [
+    {"name": "Wooden Pickaxe", "materials": ["Oak Planks x3", "Sticks x2"], "durability": 59},
+    {"name": "Stone Pickaxe", "materials": ["Cobblestone x3", "Sticks x2"], "durability": 131},
+    {"name": "Iron Pickaxe", "materials": ["Iron Ingots x3", "Sticks x2"], "durability": 250},
+    {"name": "Diamond Pickaxe", "materials": ["Diamonds x3", "Sticks x2"], "durability": 1561},
+    {"name": "Wooden Axe", "materials": ["Oak Planks x3", "Sticks x2"], "durability": 59},
+    {"name": "Stone Axe", "materials": ["Cobblestone x3", "Sticks x2"], "durability": 131},
+    {"name": "Iron Axe", "materials": ["Iron Ingots x3", "Sticks x2"], "durability": 250},
+    {"name": "Wooden Sword", "materials": ["Oak Planks x2", "Stick x1"], "damage": 4},
+    {"name": "Stone Sword", "materials": ["Cobblestone x2", "Stick x1"], "damage": 5},
+    {"name": "Iron Sword", "materials": ["Iron Ingots x2", "Stick x1"], "damage": 6},
+    {"name": "Diamond Sword", "materials": ["Diamonds x2", "Stick x1"], "damage": 7}
+  ],
+  "building_blocks": [
+    {"name": "Oak Planks", "source": "Oak Wood", "quantity": 4},
+    {"name": "Cobblestone", "source": "Stone (mined)", "tool": "Pickaxe"},
+    {"name": "Stone Bricks", "materials": ["Stone x4"], "crafted": true},
+    {"name": "Glass", "source": "Sand (smelted)", "furnace": true},
+    {"name": "Bricks", "materials": ["Clay Ball x4"], "furnace": true}
+  ],
+  "food": [
+    {"name": "Bread", "materials": ["Wheat x3"], "hunger": 5},
+    {"name": "Cooked Beef", "source": "Raw Beef (smelted)", "hunger": 8},
+    {"name": "Cooked Porkchop", "source": "Raw Porkchop (smelted)", "hunger": 8},
+    {"name": "Cooked Chicken", "source": "Raw Chicken (smelted)", "hunger": 6},
+    {"name": "Apple", "source": "Oak/Dark Oak leaves", "hunger": 4},
+    {"name": "Golden Apple", "materials": ["Apple x1", "Gold Ingots x8"], "hunger": 4, "special": "Regeneration"},
+    {"name": "Cake", "materials": ["Milk x3", "Sugar x2", "Egg x1", "Wheat x3"], "hunger": 14}
+  ],
+  "resources": [
+    {"name": "Coal", "source": "Coal Ore", "tool": "Pickaxe", "uses": "Fuel, Torches"},
+    {"name": "Iron Ore", "source": "Stone layer", "tool": "Stone Pickaxe+", "smelts_to": "Iron Ingot"},
+    {"name": "Gold Ore", "source": "Deep underground", "tool": "Iron Pickaxe+", "smelts_to": "Gold Ingot"},
+    {"name": "Diamond", "source": "Y-level 16 or below", "tool": "Iron Pickaxe+", "rare": true},
+    {"name": "Redstone", "source": "Deep underground", "tool": "Iron Pickaxe+", "uses": "Circuits"},
+    {"name": "Emerald", "source": "Mountain biomes", "tool": "Iron Pickaxe+", "rare": true}
+  ],
+  "utility": [
+    {"name": "Torch", "materials": ["Coal/Charcoal x1", "Stick x1"], "quantity": 4, "light": 14},
+    {"name": "Crafting Table", "materials": ["Oak Planks x4"], "essential": true},
+    {"name": "Furnace", "materials": ["Cobblestone x8"], "essential": true},
+    {"name": "Chest", "materials": ["Oak Planks x8"], "storage": 27},
+    {"name": "Bed", "materials": ["Wool x3", "Oak Planks x3"], "sets_spawn": true},
+    {"name": "Door", "materials": ["Oak Planks x6"], "quantity": 3},
+    {"name": "Ladder", "materials": ["Sticks x7"], "quantity": 3}
+  ]
+}

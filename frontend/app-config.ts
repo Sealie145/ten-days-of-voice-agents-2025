@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'Roshan Shop',
-  pageTitle: 'Roshan Shop - Voice Grocery Ordering',
-  pageDescription: 'Order groceries and food with your voice - powered by AI',
+  companyName: 'Minecraft Adventure',
+  pageTitle: 'Minecraft Voice Game Master',
+  pageDescription: 'Embark on a voice-controlled Minecraft adventure with your AI Game Master',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#10B981',
+  accent: '#8B4513',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#34D399',
-  startButtonText: 'Start Shopping',
+  accentDark: '#A0522D',
+  startButtonText: 'Start Adventure',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,

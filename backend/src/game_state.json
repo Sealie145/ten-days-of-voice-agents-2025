@@ -1,0 +1,27 @@
+{
+  "player_name": "Aman",
+  "current_location": "Cave Entrance",
+  "inventory": [
+    "Wooden Pickaxe",
+    "Torch x3",
+    "Iron Ore x30",
+    "Furnace",
+    "Iron Ingot x30",
+    "Iron Pickaxe",
+    "Iron Sword"
+  ],
+  "story_log": [
+    "Game started at 2025-11-29 19:25:57",
+    "Moved from Forest Biome - Spawn Point to Small Hill Cave Entrance",
+    "Moved from Small Hill Cave Entrance to Cave Entrance",
+    "Acquired: Iron Ore x30",
+    "Acquired: Furnace",
+    "Acquired: Iron Ingot x30",
+    "Acquired: Iron Pickaxe",
+    "Acquired: Iron Sword"
+  ],
+  "health": 20,
+  "hunger": 20,
+  "time_of_day": "Afternoon",
+  "started_at": "2025-11-29T19:25:57.246417"
+}
