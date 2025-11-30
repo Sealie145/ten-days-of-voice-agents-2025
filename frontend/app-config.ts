@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'Minecraft Adventure',
-  pageTitle: 'Minecraft Voice Game Master',
-  pageDescription: 'Embark on a voice-controlled Minecraft adventure with your AI Game Master',
+  companyName: 'Myntra',
+  pageTitle: 'Myntra Voice Shopping',
+  pageDescription: 'Shop fashion with your voice - powered by AI',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,10 +30,10 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#8B4513',
+  accent: '#FF3F6C',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#A0522D',
-  startButtonText: 'Start Adventure',
+  accentDark: '#FF5A7E',
+  startButtonText: 'Start Shopping',
 
   // for LiveKit Cloud Sandbox
   sandboxId: undefined,

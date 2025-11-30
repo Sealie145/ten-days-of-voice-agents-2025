@@ -1,0 +1,28 @@
+[
+  {
+    "id": "order-26ec06b1",
+    "items": [
+      {
+        "product_id": "belt-m-001",
+        "name": "Louis Philippe Leather Belt",
+        "unit_price": 999,
+        "quantity": 1,
+        "line_total": 999,
+        "attrs": {
+          "size": "34"
+        }
+      },
+      {
+        "product_id": "watch-m-001",
+        "name": "Fossil Men's Analog Watch",
+        "unit_price": 8999,
+        "quantity": 1,
+        "line_total": 8999,
+        "attrs": {}
+      }
+    ],
+    "total": 9998,
+    "currency": "INR",
+    "created_at": "2025-11-30T14:43:28.659814Z"
+  }
+]
