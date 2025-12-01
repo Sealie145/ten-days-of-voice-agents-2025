@@ -20,9 +20,9 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'Myntra',
-  pageTitle: 'Myntra Voice Shopping',
-  pageDescription: 'Shop fashion with your voice - powered by AI',
+  companyName: 'Improv Battle',
+  pageTitle: 'Improv Battle - Voice Game Show',
+  pageDescription: 'Test your improv skills in this voice-first performance game',
 
   supportsChatInput: true,
   supportsVideoInput: false,
@@ -30,12 +30,11 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   isPreConnectBufferEnabled: true,
 
   logo: '/lk-logo.svg',
-  accent: '#FF3F6C',
+  accent: '#9333EA',
   logoDark: '/lk-logo-dark.svg',
-  accentDark: '#FF5A7E',
-  startButtonText: 'Start Shopping',
+  accentDark: '#A855F7',
+  startButtonText: 'Start Improv Battle',
 
-  // for LiveKit Cloud Sandbox
   sandboxId: undefined,
   agentName: undefined,
 };
